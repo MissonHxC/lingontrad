@@ -4,15 +4,14 @@ const fileUpload = require('express-fileupload');
 const csv = require('csv-parser');
 const fs = require('fs');
 const hepburn = require("hepburn");
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const csvWriter = createCsvWriter({
-  path: 'romanji.csv',
+const createCsvStringifier = require('csv-writer').createObjectCsvStringifier;
+const csvStringifier = createCsvStringifier({
   header: [
     {id: 'kana', title: 'KANA'},
     {id: 'roma', title: 'ROMANJI'}
   ]
 });
-const records = [];
+let records = [];
 
 // Api
 const app = express();
@@ -20,52 +19,31 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(fileUpload());
 
-app.post('/upload', function(req, res) {
+app.post('/results', function(req, res) {
   if (Object.keys(req.files).length == 0) {
     return res.status(400).send('No files were uploaded.');
   }
 
   let uploadedFile = req.files.uploadedFile;
+  let csvFile = uploadedFile.name
 
-  uploadedFile.mv(uploadedFile.name, function(err) {
+  uploadedFile.mv(csvFile, function(err) {
     if (err)
       return res.status(500).send(err);
 
-    fs.createReadStream(uploadedFile.name)  
+    fs.createReadStream(csvFile)
     .pipe(csv())
     .on('data', (row) => {
       records.push({kana: row.NAME, roma: hepburn.fromKana(row.NAME)});
     })
     .on('end', () => {
-      if (fs.existsSync('./romanji.csv')) {
-        fs.unlink('romanji.csv', 
-          function(err, data) { 
-            if (err) throw err;
-          });
-      }
-      csvWriter.writeRecords(records)
-        .then(() => {
-          fs.unlink(uploadedFile.name, 
-            function(err, data) { 
-              if (err) throw err;
-            });
-        });
+      fs.unlink(csvFile, function (err) {
+        if (err) throw err;
+      });
+      res.setHeader('Content-Type', 'text/csv');
+      res.send(csvStringifier.stringifyRecords(records));
+      records = [];
     });
-
-    res.download('romanji.csv');
-    res.download('romanji.csv', 'results.csv', function (err) {
-      if (err) {
-        fs.unlink('romanji.csv', 
-          function(err, data) { 
-            if (err) throw err;
-          });
-      } else {
-        fs.unlink('romanji.csv', 
-          function(err, data) { 
-            if (err) throw err;
-          });
-      }
-    })
   });
 });
 
