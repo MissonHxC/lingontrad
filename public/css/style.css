@@ -1,0 +1,60 @@
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+
+.input-container {
+    margin: 3em auto 1em;
+    max-width: 300px;
+    background-color: #EDEDED;
+    border: 1px solid #DFDFDF;
+    border-radius: 5px;
+    text-align: left;
+  }
+  input[type='file'] {
+    display: none;
+  }
+  .file-info {
+    font-size: 0.9em;
+  }
+  .browse-btn {
+    background: #03A595;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    display: inline-block;
+  }
+  .browse-btn:hover {
+    background: #4ec0b4;
+    cursor: pointer;
+  }
+  @media (max-width: 300px) {
+    .browse-btn {
+      width: 100%;
+      border-top-right-radius: 5px;
+      border-bottom-left-radius: 0;
+    }
+    
+    .file-info {
+      display: block;
+      margin: 10px 5px;
+    }
+  }
+
+input[type='submit'] {
+    max-width: 300px;
+    width: 300px;
+    line-height: 38px;
+    background: #248c1f;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    border: 1px solid #DFDFDF;
+    color: white;
+  }
+  input[type='submit']:hover {
+    background: #0ba503;
+    cursor: pointer;
+  }
