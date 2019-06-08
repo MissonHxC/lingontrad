@@ -53,6 +53,10 @@ app.post('/upload', function(req, res) {
     });
 
     res.download('romanji.csv');
+    fs.unlink('romanji.csv', 
+      function(err, data) { 
+        if (err) throw err;
+      });
   });
 });
 
