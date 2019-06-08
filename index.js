@@ -52,7 +52,18 @@ app.post('/upload', function(req, res) {
         });
     });
 
-    res.download('romanji.csv');
+    res.download('romanji.csv', function (err) {
+      if (err) {
+        fs.unlink('romanji.csv', 
+          function(err, data) { 
+            if (err) throw err;
+          });
+      } else {
+        fs.unlink('romanji.csv', 
+          function(err, data) { 
+            if (err) throw err;
+          });
+      };
   });
 });
 
