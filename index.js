@@ -37,10 +37,12 @@ app.post('/upload', function(req, res) {
       records.push({kana: row.NAME, roma: hepburn.fromKana(row.NAME)});
     })
     .on('end', () => {
-      fs.unlink('romanji.csv', 
-        function(err, data) { 
-          if (err) throw err;
-        });
+      if (fs.existsSync('./romanji.csv')) {
+        fs.unlink('romanji.csv', 
+          function(err, data) { 
+            if (err) throw err;
+          });
+      }
       csvWriter.writeRecords(records)
         .then(() => {
           fs.unlink(uploadedFile.name, 
