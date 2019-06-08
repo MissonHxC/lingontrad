@@ -1,4 +1,5 @@
 const express = require('express');
+const PORT = process.env.PORT || 5000
 const fileUpload = require('express-fileupload');
 const csv = require('csv-parser');
 const fs = require('fs');
@@ -60,5 +61,7 @@ app.get('/', function(req, res) {
   res.setHeader('Content-Type', 'text/plain');
   res.status(404).send('Page introuvable !');
 });
+
+app.listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
 module.exports = app;
